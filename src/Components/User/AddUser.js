@@ -1,18 +1,23 @@
 import Card from '../UI/Card';
 import classes from './AddUser.module.css';
 import Button from '../UI/Button';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import ErrorModal from '../UI/ErrorModal';
 import Wrapper from '../Helpers/Wrapper';
 
 const AddUser = props => {
-    const [enteredUsername, setEnteredUsername] = useState('');
-    const [enteredAge, setEnteredAge] = useState('');
+    const nameInputRef = useRef(); // replacing useState with refs instead to learn but useState is still a choice and actually
+    const ageInputRef = useRef(); // better in this case since we want to manipulate/change the input fields; can use refs though
+                                    // if only interested in reading input and not changing it in any way
+
     const [error, setError] = useState();
 
     const addUserHandler = event => {
         event.preventDefault();
-        if(enteredUsername.trim().length === 0 || enteredAge.trim().length === 0 ){
+        const enteredName = nameInputRef.current.value;
+        const enteredUserAge = ageInputRef.current.value;
+
+        if(enteredName.trim().length === 0 || enteredUserAge.trim().length === 0 ){
             setError(
             {
                 title: 'Invalid input', 
@@ -21,7 +26,7 @@ const AddUser = props => {
             );
             return;
         }
-        if(+enteredAge < 1){ // the plus is a forced conversion of the age string to a number
+        if(+enteredUserAge < 1){ // the plus is a forced conversion of the age string to a number
             setError(
             {
                 title: 'Invalid age', 
@@ -30,18 +35,11 @@ const AddUser = props => {
             );
             return;
         }
-        props.onAddUser(enteredUsername, enteredAge);
-        setEnteredUsername('');
-        setEnteredAge('');
+        props.onAddUser(enteredName, enteredUserAge);
+        nameInputRef.current.value = ''; // usually not ok to manipulate DOM this way and could just do useState instead
+        ageInputRef.current.value = ''; // but we will do this here since using refs in this example
     };
 
-    const usernameChangeHandler = (event) => {
-        setEnteredUsername(event.target.value);
-    };
-
-    const ageChangeHandler = (event) => {
-        setEnteredAge(event.target.value);
-    };
 
     const errorHandler = () => {
         setError(null);
@@ -53,9 +51,9 @@ const AddUser = props => {
             <Card className={classes.input}>
                 <form onSubmit={addUserHandler}>
                     <label htmlFor="username">Username</label>
-                    <input type="text" id="username" value={enteredUsername} onChange={usernameChangeHandler}/>
+                    <input type="text" id="username" ref={nameInputRef}/>
                     <label htmlFor="age">Age (Years)</label>
-                    <input type="number" id="age" value={enteredAge} onChange={ageChangeHandler}/>
+                    <input type="number" id="age" ref={ageInputRef}/>
                     <Button type="submit">Add User</Button>
                 </form>
             </Card>
