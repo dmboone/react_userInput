@@ -12,10 +12,10 @@ const addUserHandler = (uName, uAge) => {
 };
 
   return (
-    <div>
-      <AddUser onAddUser={addUserHandler}></AddUser>
+    <> {/** Could also use <React.Fragment> we do this instead of wrapping our code in a div so that we eliminate a bunch of divs from our DOM*/}
+      <AddUser onAddUser={addUserHandler}></AddUser> {/** React fragment tags will not show up in the DOM, only what is inside, keeping things from getting cluttered */}
       <UserList users={usersList}></UserList>
-    </div>
+    </>
   );
 }
 

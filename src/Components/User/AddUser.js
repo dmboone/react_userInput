@@ -48,7 +48,7 @@ const AddUser = props => {
     };
 
     return(
-        <Wrapper>
+        <Wrapper> {/** We used our own Wrapper class here but this does the same thing as wrapping inside <React.Fragment></React.Fragment> or <></>*/}
             {error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler}></ErrorModal>}
             <Card className={classes.input}>
                 <form onSubmit={addUserHandler}>
